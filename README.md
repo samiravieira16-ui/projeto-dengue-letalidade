@@ -1,5 +1,5 @@
 
-# Projeto Dengue Mortalidade: Fatores de Risco e Evolução Clínica (2000-2025)
+# Projeto Dengue Mortalidade: Fatores de Risco e Evolução Clínica (2021-2025)
 
 ## 1. Tema e Problema Definido
 
@@ -11,7 +11,7 @@
 
 ## 2. Descrição da Base de Dados
 
-A base de dados é extraída do **SINAN (Sistema de Informação de Agravos de Notificação)**, disponibilizada via Kaggle. Ela contém microdados das notificações compulsórias de Dengue no Brasil de 2000 a 2025.
+A base de dados é extraída do **SINAN (Sistema de Informação de Agravos de Notificação)**, disponibilizada via Kaggle. Ela contém microdados das notificações compulsórias de Dengue no Brasil de 2021 a 2025.
 
 * **Fonte:** SINAN/DATASUS.
 * **Ambiente de Análise:** Google Colab (processamento em nuvem via upload).
