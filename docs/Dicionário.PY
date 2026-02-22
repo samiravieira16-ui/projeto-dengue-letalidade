@@ -1,5 +1,6 @@
 import pandas as pd
-from IPython.display import display, HTML
+# Usa a biblioteca nativa ou instale-a via: pip install tabulate
+from tabulate import tabulate
 
 # Criando os dados estruturados idênticos ao PDF Oficial
 documentacao_dados = [
@@ -56,8 +57,14 @@ documentacao_dados = [
 
 # Transformando num DataFrame Pandas
 df_dicionario = pd.DataFrame(documentacao_dados, columns=[
-    "Seq.", "Nome do Campo (Novo)", "Campo Original", "Tipo", "Categoria / Valores Possíveis", "Descrição / Características"
+    "Seq.", "Nome Novo", "Original", "Tipo", "Valores Possiveis", "Descricao"
 ])
 
-# Para exibir uma tabela renderizada bonita no Colab:
-display(HTML(df_dicionario.to_html(index=False, classes='table table-striped')))
+# ======= PARA EXIBIR LINDAMENTE NO TERMINAL =======
+print("\n" + "="*80)
+print("             DICIONÁRIO DE DADOS CONSOLIDADO (DENGUE BR) ")
+print("="*80)
+
+# O formato 'grid' cria as bordas e tabelas cruzadas (outros: 'pipe', 'fancy_grid', 'psql')
+tabela_terminal = tabulate(df_dicionario, headers='keys', tablefmt='grid', showindex=False)
+print(tabela_terminal)
