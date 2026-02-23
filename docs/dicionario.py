@@ -72,3 +72,6 @@ print("DICIONÁRIO DE DADOS CONSOLIDADO (DENGUE BR)")
 # 3. Chame a variável pura na última linha para ela renderizar na tela de desenvolvimento
 df_interativo
 
+### Execução: Rode o arquivo para exibir a tabela formatada no terminal de saída ###
+# if __name__ == "__main__":
+     # print(df_interativo) 
