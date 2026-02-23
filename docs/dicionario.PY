@@ -53,18 +53,22 @@ documentacao_dados = [
     [47, "Data_Obito", 'DT_OBITO', 'Data', 'dd/mm/aaaa', 'Data preenchida da declaração de óbito decorrente.'],
     [48, "Data_Encerramento", 'DT_ENCERRA', 'Data', 'dd/mm/aaaa', 'Fechamento final do monitoramento e preenchimento DataSUS.'],
     [49, "Ocorreu_Hospitalizacao", 'HOSPITALIZ', 'Char(1)', '1-Sim, 2-Não, 3-Ignorado', 'Sinaliza internamento com pernoites em prontuários na unidade.']
+
 ]
 
-# Transformando num DataFrame Pandas
 df_dicionario = pd.DataFrame(documentacao_dados, columns=[
     "Seq.", "Nome Novo", "Original", "Tipo", "Valores Possiveis", "Descricao"
 ])
 
-# ======= PARA EXIBIR LINDAMENTE NO TERMINAL =======
-print("\n" + "="*80)
-print("             DICIONÁRIO DE DADOS CONSOLIDADO (DENGUE BR) ")
-print("="*80)
+# === EXIBIÇÃO APENAS NA JANELA INTERATIVA ===
 
-# O formato 'grid' cria as bordas e tabelas cruzadas (outros: 'pipe', 'fancy_grid', 'psql')
-tabela_terminal = tabulate(df_dicionario, headers='keys', tablefmt='grid', showindex=False)
-print(tabela_terminal)
+# 1. Definimos 'Seq.' como o índice. Isso remove a coluna de zeros (0, 1, 2...)
+# e usa a sua numeração oficial no lugar.
+df_interativo = df_dicionario.set_index('Seq.')
+
+# 2. Para colocar o título sem usar o .style (que exige jinja2):
+print("DICIONÁRIO DE DADOS CONSOLIDADO (DENGUE BR)")
+
+# 3. Chame a variável pura na última linha para ela renderizar na tela de desenvolvimento
+df_interativo
+
