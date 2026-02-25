@@ -1,100 +1,78 @@
-import pandas as pd 
-import glob 
-import os 
+import pandas as pd
+import glob
+import os
 
-def analisar_dinamica_temporal(pasta_dados, 
-pasta_saida="resultados"): 
-    """ 
-    Calcula o tempo (em dias) do início dos sintomas até o óbito. 
-    ESTRITAMENTE para Desfecho_Caso == 2 (Óbito pelo agravo). 
-    """ 
-    arquivos = glob.glob(os.path.join(pasta_dados, "*.parquet")) 
-      
-    if not os.path.exists(pasta_saida): 
-        os.makedirs(pasta_saida) 
-  
-    lista_tempos = [] 
-  
-    print(f"⏳ Analisando dinâmica temporal (Apenas Desfecho 2) em 
-{len(arquivos)} arquivos...") 
-  
-     for arquivo in arquivos: 
-         # Carregar colunas necessárias 
-         df = pd.read_parquet(arquivo, columns=[ 
-             "Data_Inicio_Sintomas",  
-             "Data_Obito",  
-             "SOROTIPO",  
-             "Desfecho_Caso" 
-         ]) 
-          
-         # 1. Padronização e Filtro Estrito do Desfecho 2 
-         # Converte para string e limpa formatos como '2.0' ou '2 ' 
-         df["Desfecho_Caso"] = 
-df["Desfecho_Caso"].astype(str).str.replace(".0", "", 
-regex=False).str.strip() 
-          
-         # FILTRO CRUCIAL: Considera apenas óbitos confirmados pelo 
-agravo 
-         df_obitos = df[df["Desfecho_Caso"] == "2"].copy() 
-  
-         # 2. Remover registros com datas faltantes (null) ou sem 
-sorotipo 
-         df_obitos = df_obitos.dropna(subset=["Data_Obito", 
-"Data_Inicio_Sintomas", "SOROTIPO"]) 
-  
-        if not df_obitos.empty: 
-            # 3. Converter Timestamps (ms) para Datetime real 
-            df_obitos["Data_Inicio_Sintomas"] = 
-pd.to_datetime(df_obitos["Data_Inicio_Sintomas"], unit='ms') 
-            df_obitos["Data_Obito"] = 
-pd.to_datetime(df_obitos["Data_Obito"], unit='ms') 
-  
-             # 4. Calcular a diferença em dias 
-             df_obitos["Dias_Ate_Obito"] = (df_obitos["Data_Obito"] - 
-df_obitos["Data_Inicio_Sintomas"]).dt.days 
-  
-             # 5. Filtro de consistência: Óbito deve ser igual ou 
-posterior aos sintomas 
-            df_obitos = df_obitos[df_obitos["Dias_Ate_Obito"] >= 0]   
-            lista_tempos.append(df_obitos) 
-          
-        print(f"✔ {os.path.basename(arquivo)} processado.") 
-  
-    if not lista_tempos: 
-        print("⚠ Nenhum óbito com desfecho '2' foi encontrado nos 
-arquivos.") 
-        return pd.DataFrame(), pd.DataFrame() 
-  
-    # Concatenar resultados de todos os anos 
-    df_final = pd.concat(lista_tempos, ignore_index=True) 
-  
-    # --- Estatísticas Descritivas por Sorotipo --- 
-    estatisticas = 
-df_final.groupby("SOROTIPO")["Dias_Ate_Obito"].agg([ 
-        'count', 'mean', 'median', 'std' 
-    ]).round(2) 
-  
-    # Renomear colunas para o CSV final 
-    estatisticas.columns = [ 
-        'Total_Obitos_Confirmados',  
-        'Media_Dias_Sintoma_ao_Obito',  
-        'Mediana_Dias',  
-        'Desvio_Padrao' 
-    ] 
-  
-    # Salvar resultado 
-    caminho_csv = os.path.join(pasta_saida, 
-"dinamica_temporal_obitos_confirmados.csv") 
-    estatisticas.to_csv(caminho_csv) 
-      
-    print("\n" + "="*45) 
-    print("📊 ANÁLISE TEMPORAL FINALIZADA (DESFECHO 2)") 
-    print(f"Total de óbitos processados: {len(df_final)}") 
-    print(f"Arquivo salvo: {caminho_csv}") 
-    print("="*45) 
-    return estatisticas, df_final 
-  
-if __name__ == "__main__": 
-    # Executa apontando para a pasta 'dados' na raiz do seu projeto 
-    stats, _ = analisar_dinamica_temporal("dados") 
-print(stats) 
+
+def exibir_grafico_temporal_ascii(df_estatisticas):
+    """Exibe um gráfico de barras em ASCII com a média de dias até óbito por sorotipo."""
+    df_plot = df_estatisticas.sort_values('Media_Dias_Sintoma_ao_Obito', ascending=True)
+    max_val = df_plot['Media_Dias_Sintoma_ao_Obito'].max()
+    max_width = 50
+
+    print(f"\n{'='*70}")
+    print(f"{'📊 GRÁFICO: MÉDIA DE DIAS ATÉ ÓBITO POR SOROTIPO':^70}")
+    print(f"{'='*70}\n")
+
+    for sorotipo, row in df_plot.iterrows():
+        media = row['Media_Dias_Sintoma_ao_Obito']
+        total = int(row['Total_Obitos_Confirmados'])
+        size = int((media / max_val) * max_width) if max_val and max_val > 0 else 0
+        barra = '█' * size
+        print(f"  Sorotipo {sorotipo:<2} {barra:<50} {media:5.2f} dias ({total:4} óbitos)")
+
+    print(f"\n{'='*70}\n")
+
+
+def exibir_tabela_temporal(df_estatisticas):
+    """Exibe a tabela de estatísticas temporais no console."""
+    print(f"\n{'-'*70}")
+    print(f"{'TABELA: ANÁLISE TEMPORAL POR SOROTIPO':^70}")
+    print(f"{'-'*70}")
+    print(df_estatisticas.to_string())
+    print(f"{'-'*70}\n")
+
+
+def analisar_dinamica_temporal(pasta_dados):
+    """Calcula e exibe estatísticas temporais (apenas no terminal).
+
+    - Exibe tabela e gráfico ASCII no terminal.
+    """
+    arquivos = glob.glob(os.path.join(pasta_dados, "*.parquet"))
+    if not arquivos:
+        print("⚠ Nenhum arquivo Parquet encontrado em:", pasta_dados)
+        return pd.DataFrame()
+
+    lista = []
+    print(f"⏳ Analisando dinâmica temporal (Desfecho 2) em {len(arquivos)} arquivos...")
+    for arq in arquivos:
+        df = pd.read_parquet(arq, columns=["Data_Inicio_Sintomas", "Data_Obito", "SOROTIPO", "Desfecho_Caso"])
+        df["Desfecho_Caso"] = df["Desfecho_Caso"].astype(str).str.replace('.0', '', regex=False).str.strip()
+        df_obitos = df[df["Desfecho_Caso"] == '2'].dropna(subset=["Data_Inicio_Sintomas", "Data_Obito", "SOROTIPO"]).copy()
+        if df_obitos.empty:
+            print(f"✔ {os.path.basename(arq)} processado (0 óbitos relevantes)")
+            continue
+        df_obitos["Data_Inicio_Sintomas"] = pd.to_datetime(df_obitos["Data_Inicio_Sintomas"], unit='ms')
+        df_obitos["Data_Obito"] = pd.to_datetime(df_obitos["Data_Obito"], unit='ms')
+        df_obitos["Dias_Ate_Obito"] = (df_obitos["Data_Obito"] - df_obitos["Data_Inicio_Sintomas"]).dt.days
+        df_obitos = df_obitos[df_obitos["Dias_Ate_Obito"] >= 0]
+        lista.append(df_obitos)
+        print(f"✔ {os.path.basename(arq)} processado ({len(df_obitos)} óbitos)")
+
+    if not lista:
+        print("⚠ Nenhum óbito com desfecho '2' foi encontrado nos arquivos.")
+        return pd.DataFrame()
+
+    df_final = pd.concat(lista, ignore_index=True)
+    stats = df_final.groupby('SOROTIPO')["Dias_Ate_Obito"].agg(['count', 'mean', 'median', 'std']).round(2)
+    stats.columns = ['Total_Obitos_Confirmados', 'Media_Dias_Sintoma_ao_Obito', 'Mediana_Dias', 'Desvio_Padrao']
+
+    # Exibir tabela e gráfico no terminal (sem salvar arquivos)
+    exibir_tabela_temporal(stats)
+    exibir_grafico_temporal_ascii(stats)
+
+    print("✅ Análise temporal concluída (visualização exibida no terminal).")
+    return stats
+
+
+if __name__ == '__main__':
+    analisar_dinamica_temporal('dados')

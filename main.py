@@ -1,9 +1,8 @@
 import os
 import pandas as pd
-from analises.letalidade_sorotipos import analisar_letalidade_completa
-from analises.dinamica_temporal import analisar_dinamica_temporal
-from analises.severidade_demografia import analisar_severidade_demografia_absoluta
 from analises.comorbidades_view import analisar_letalidade_comorbidades
+from analises.dinamica_temporal import analisar_dinamica_temporal
+from analises.visualization import visualizar_analise_comorbidades
 
 def main():
     # Configurações de diretórios
@@ -14,40 +13,55 @@ def main():
     if not os.path.exists(PASTA_RESULTADOS):
         os.makedirs(PASTA_RESULTADOS)
 
-    print(f"{'='*60}")
-    print(f"{'SISTEMA DE ANÁLISE EPIDEMIOLÓGICA - DENGUE':^60}")
-    print(f"{'='*60}\n")
+    print(f"{'='*70}")
+    print(f"{'ANÁLISE DE COMORBIDADES EM DENGUE':^70}")
+    print(f"{'='*70}\n")
 
     try:
-        # 1. Análise de Letalidade por Sorotipo (Samira)
-        print("🚀 [1/4] Iniciando Análise de Letalidade por Sorotipo...")
-        df_let = analisar_letalidade_completa(PASTA_DADOS)
-        df_let.to_csv(os.path.join(PASTA_RESULTADOS, "1_letalidade_sorotipo.csv"), index=False)
-        print("✅ Sucesso: Tabela de letalidade gerada.\n")
-
-        # 2. Dinâmica Temporal (Felipe)
-        print("🚀 [2/4] Iniciando Análise de Dinâmica Temporal...")
-        stats_temp, _ = analisar_dinamica_temporal(PASTA_DADOS, PASTA_RESULTADOS)
-        print("✅ Sucesso: Estatísticas temporais calculadas.\n")
-
-        # 3. Severidade e Demografia (Ramon)
-        print("🚀 [3/4] Iniciando Distribuição Demográfica Absoluta...")
-        df_demo = analisar_severidade_demografia_absoluta(PASTA_DADOS, PASTA_RESULTADOS)
-        print("✅ Sucesso: Perfil demográfico mapeado.\n")
-
-        # 4. Mapeamento de Comorbidades (Pierry)
-        print("🚀 [4/4] Iniciando Mapeamento de Comorbidades (View)...")
+        # Análise de Comorbidades
+        print("🚀 Iniciando análise de dados...\n")
         df_comorb = analisar_letalidade_comorbidades(PASTA_DADOS, PASTA_RESULTADOS)
-        df_comorb.to_csv(os.path.join(PASTA_RESULTADOS, "4_letalidade_comorbidades.csv"), index=False)
-        print("✅ Sucesso: Letalidade por comorbidade finalizada.\n")
-
-        print(f"{'='*60}")
-        print(f"{'ANÁLISE COMPLETA FINALIZADA COM SUCESSO!':^60}")
-        print(f"Confira os arquivos na pasta: {PASTA_RESULTADOS}")
-        print(f"{'='*60}")
+        
+        if df_comorb is not None and len(df_comorb) > 0:
+            caminho_csv = os.path.join(PASTA_RESULTADOS, "analise_comorbidades.csv")
+            df_comorb.to_csv(caminho_csv, index=False)
+            print(f"✅ Arquivo CSV salvo: {caminho_csv}\n")
+            
+            # Criar visualização
+            print("📊 Gerando visualização gráfica...\n")
+            caminho_grafico = visualizar_analise_comorbidades(df_comorb, PASTA_RESULTADOS)
+            print(f"✅ Gráfico salvo: {caminho_grafico}\n")
+            
+            print(f"{'='*70}")
+            print(f"{'ANÁLISE CONCLUÍDA COM SUCESSO!':^70}")
+            print(f"Confira os arquivos na pasta: {PASTA_RESULTADOS}")
+            print(f"  📄 {os.path.basename(caminho_csv)}")
+            print(f"  📈 {os.path.basename(caminho_grafico)}")
+            print(f"{'='*70}\n")
+        else:
+            print("❌ Nenhum dado foi processado!\n")
+        
+        # Análise Temporal
+        print(f"{'='*70}")
+        print(f"{'ANÁLISE DINÂMICA TEMPORAL EM DENGUE':^70}")
+        print(f"{'='*70}\n")
+        
+        stats_temporal = analisar_dinamica_temporal(PASTA_DADOS)
+        
+        if stats_temporal is not None and len(stats_temporal) > 0:
+            print(f"\n✅ Análise temporal completed! (tabela + gráfico no terminal)\n")
+            print(f"{'='*70}")
+            print(f"{'ANÁLISES FINALIZADAS COM SUCESSO!':^70}")
+            print(f"Arquivos gerados na pasta: {PASTA_RESULTADOS}")
+            print(f"  ✓ analise_comorbidades.csv")
+            print(f"  ✓ analise_comorbidades.png")
+            print(f"  (Análise temporal: tabela e gráfico exibidos no terminal)")
+            print(f"{'='*70}\n")
 
     except Exception as e:
-        print(f"\n❌ ERRO CRÍTICO DURANTE A EXECUÇÃO: {e}")
+        print(f"\n❌ ERRO DURANTE A EXECUÇÃO: {e}")
+        import traceback
+        traceback.print_exc()
 
 if __name__ == "__main__":
     main()

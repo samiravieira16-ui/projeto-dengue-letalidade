@@ -67,11 +67,10 @@ df_dicionario = pd.DataFrame(documentacao_dados, columns=[
 df_interativo = df_dicionario.set_index('Seq.')
 
 # 2. Para colocar o título sem usar o .style (que exige jinja2):
-print("DICIONÁRIO DE DADOS CONSOLIDADO (DENGUE BR)")
 
 # 3. Chame a variável pura na última linha para ela renderizar na tela de desenvolvimento
-df_interativo
 
 ### Execução: Rode o arquivo para exibir a tabela formatada no terminal de saída ###
-# if __name__ == "__main__":
-     # print(df_interativo) 
+if __name__ == "__main__":
+    print("DICIONÁRIO DE DADOS CONSOLIDADO (DENGUE BR)")
+    print(df_interativo)
