@@ -3,6 +3,7 @@ import pandas as pd
 from tabulate import tabulate
 
 # Criando os dados estruturados idênticos ao PDF Oficial
+
 documentacao_dados = [
     [1, "Tipo_Notificacao", 'TP_NOT', 'Char(1)', '1-Negativa, 2-Individual, 3-Surto', 'Identifica o tipo da notificação realizada.'],
     [2, "Agravo", 'ID_AGRAVO', 'Char(5)', 'A90 (Dengue)', 'Nome e código do agravo notificado segundo a CID-10.'],
@@ -52,8 +53,42 @@ documentacao_dados = [
     [46, "Evolucao_Caso", 'EVOLUCAO', 'Char(1)', '1-Cura, 2-Obito Dengue...', 'Desfecho e encerramento clínico da sobrevivência da taxa.'],
     [47, "Data_Obito", 'DT_OBITO', 'Data', 'dd/mm/aaaa', 'Data preenchida da declaração de óbito decorrente.'],
     [48, "Data_Encerramento", 'DT_ENCERRA', 'Data', 'dd/mm/aaaa', 'Fechamento final do monitoramento e preenchimento DataSUS.'],
-    [49, "Ocorreu_Hospitalizacao", 'HOSPITALIZ', 'Char(1)', '1-Sim, 2-Não, 3-Ignorado', 'Sinaliza internamento com pernoites em prontuários na unidade.']
-
+    [49, "Ocorreu_Hospitalizacao", 'HOSPITALIZ', 'Char(1)', '1-Sim, 2-Não, 3-Ignorado', 'Sinaliza internamento com pernoites em prontuários na unidade.'],
+    # ===================== RESIDÊNCIA DO PACIENTE =====================
+    [50, "UF_Residencia", 'UF', 'Char(2)', 'Código IBGE', 'Código da UF de residência do paciente.'],
+    [51, "Municipio_Residencia", 'MUNICIPIO', 'Char(6)', 'Código IBGE 6 dígitos', 'Município de residência do paciente.'],
+    [52, "Cod_Municipio_Residencia", 'ID_MN_RESI', 'Char(6)', 'Código IBGE 6 dígitos', 'Código do município de residência (campo auxiliar).'],
+    [53, "UF_Residencia_Sigla", 'SG_UF', 'Char(2)', 'Ex: SP, RJ, MG', 'Sigla da UF de residência do paciente.'],
+    [54, "Regiao_Saude_Residencia", 'ID_RG_RESI', 'Char(4)', 'Códigos regionais SUS', 'Regional de Saúde do município de residência.'],
+    [55, "Pais_Residencia", 'ID_PAIS', 'Num(3)', 'Código do País', 'País de residência do paciente.'],
+    [56, "Ocupacao", 'ID_OCUPA_N', 'Char(6)', 'Código CBO', 'Ocupação profissional do paciente (CBO).'],
+    [57, "Data_Internacao", 'DT_INTERNA', 'Data', 'dd/mm/aaaa', 'Data de internação hospitalar do paciente.'],
+    # ===================== EXAMES LABORATORIAIS =====================
+    [58, "Resultado_Sorologia", 'RESUL_SORO', 'Char(1)', '1-Reagente, 2-Não Reagente...', 'Resultado do exame sorológico (IgM).'],
+    [59, "Resultado_NS1", 'RESUL_NS1', 'Char(1)', '1-Positivo, 2-Negativo...', 'Resultado do teste rápido NS1.'],
+    [60, "Data_Isolamento_Viral", 'DT_VIRAL', 'Data', 'dd/mm/aaaa', 'Data da coleta para isolamento viral.'],
+    [61, "Resultado_Isolamento_Viral", 'RESUL_VI_N', 'Char(1)', '1-Positivo, 2-Negativo...', 'Resultado do isolamento viral.'],
+    [62, "Resultado_PCR", 'RESUL_PCR_', 'Char(1)', '1-Positivo, 2-Negativo...', 'Resultado do exame RT-PCR.'],
+    [63, "Sorotipo_Viral", 'SOROTIPO', 'Char(1)', '1-DENV1, 2-DENV2, 3-DENV3, 4-DENV4', 'Sorotipo do vírus da Dengue identificado.'],
+    [64, "Resultado_Histopatologia", 'HISTOPA_N', 'Char(1)', '1-Positivo, 2-Negativo...', 'Resultado do exame histopatológico.'],
+    [65, "Resultado_Imunohistoquimica", 'IMUNOH_N', 'Char(1)', '1-Positivo, 2-Negativo...', 'Resultado do exame de imunohistoquímica.'],
+    # ===================== SINAIS DE ALARME =====================
+    [66, "Alarme_Hipotensao", 'ALRM_HIPOT', 'Char(1)', '1-Sim, 2-Não', 'Hipotensão postural ou lipotímia como sinal de alarme.'],
+    [67, "Alarme_Plaquetopenia", 'ALRM_PLAQ', 'Char(1)', '1-Sim, 2-Não', 'Queda abrupta de plaquetas como sinal de alarme.'],
+    [68, "Alarme_Vomitos_Persistentes", 'ALRM_VOM', 'Char(1)', '1-Sim, 2-Não', 'Vômitos persistentes como sinal de alarme.'],
+    [69, "Alarme_Sangramento_Mucosa", 'ALRM_SANG', 'Char(1)', '1-Sim, 2-Não', 'Sangramento de mucosas como sinal de alarme.'],
+    [70, "Alarme_Aumento_Hematocrito", 'ALRM_HEMAT', 'Char(1)', '1-Sim, 2-Não', 'Aumento progressivo do hematócrito como sinal de alarme.'],
+    [71, "Alarme_Dor_Abdominal", 'ALRM_ABDOM', 'Char(1)', '1-Sim, 2-Não', 'Dor abdominal intensa e contínua como sinal de alarme.'],
+    [72, "Alarme_Letargia", 'ALRM_LETAR', 'Char(1)', '1-Sim, 2-Não', 'Letargia e irritabilidade como sinal de alarme.'],
+    # ===================== SINAIS DE GRAVIDADE =====================
+    [73, "Gravidade_Pulso_Debil", 'GRAV_PULSO', 'Char(1)', '1-Sim, 2-Não', 'Pulso fraco ou imperceptível como sinal de gravidade.'],
+    [74, "Gravidade_PA_Convergente", 'GRAV_CONV', 'Char(1)', '1-Sim, 2-Não', 'Pressão arterial convergente (diferença ≤20 mmHg).'],
+    [75, "Gravidade_Enchimento_Capilar_Lento", 'GRAV_ENCH', 'Char(1)', '1-Sim, 2-Não', 'Enchimento capilar lento (>2 segundos).'],
+    [76, "Gravidade_Insuficiencia_Respiratoria", 'GRAV_INSUF', 'Char(1)', '1-Sim, 2-Não', 'Insuficiência respiratória como sinal de gravidade.'],
+    [77, "Gravidade_Taquicardia", 'GRAV_TAQUI', 'Char(1)', '1-Sim, 2-Não', 'Taquicardia como sinal de gravidade.'],
+    [78, "Gravidade_Extremidades_Frias", 'GRAV_EXTRE', 'Char(1)', '1-Sim, 2-Não', 'Extremidades frias e cianose como sinal de gravidade.'],
+    # ===================== METADADOS DO SISTEMA =====================
+    [79, "Data_Digitacao", 'DT_DIGITA', 'Data', 'dd/mm/aaaa', 'Data de digitação do registro no sistema SINAN.']
 ]
 
 df_dicionario = pd.DataFrame(documentacao_dados, columns=[
