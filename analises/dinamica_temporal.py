@@ -9,27 +9,27 @@ def exibir_grafico_temporal_ascii(df_estatisticas):
     max_val = df_plot['Media_Dias_Sintoma_ao_Obito'].max()
     max_width = 50
 
-    print(f"\n{'='*70}")
-    print(f"{'📊 GRÁFICO: MÉDIA DE DIAS ATÉ ÓBITO POR SOROTIPO':^70}")
-    print(f"{'='*70}\n")
+    print(f"\n{'='*75}")
+    print(f"{'📊 GRÁFICO: MÉDIA DE DIAS ATÉ ÓBITO POR SOROTIPO':^75}")
+    print(f"{'='*75}\n")
 
     for sorotipo, row in df_plot.iterrows():
         media = row['Media_Dias_Sintoma_ao_Obito']
         total = int(row['Total_Obitos_Confirmados'])
         size = int((media / max_val) * max_width) if max_val and max_val > 0 else 0
         barra = '█' * size
-        print(f"  Sorotipo {sorotipo:<2} {barra:<50} {media:5.2f} dias ({total:4} óbitos)")
+        print(f"  Sorotipo {sorotipo:<2} {barra:<50} {media:5.2f} dias")
 
-    print(f"\n{'='*70}\n")
+    print(f"\n{'='*75}\n")
 
 
 def exibir_tabela_temporal(df_estatisticas):
     """Exibe a tabela de estatísticas temporais no console."""
-    print(f"\n{'-'*70}")
-    print(f"{'TABELA: ANÁLISE TEMPORAL POR SOROTIPO':^70}")
-    print(f"{'-'*70}")
+    print(f"\n{'-'*75}")
+    print(f"{'TABELA: ANÁLISE TEMPORAL POR SOROTIPO':^75}")
+    print(f"{'-'*75}")
     print(df_estatisticas.to_string())
-    print(f"{'-'*70}\n")
+    print(f"{'-'*75}\n")
 
 
 def analisar_dinamica_temporal(pasta_dados):

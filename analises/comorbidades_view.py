@@ -19,9 +19,9 @@ def exibir_grafico_ascii_comorbidades(df):
     max_val = df_plot['Letalidade_%'].max()
     max_width = 40  # Largura máxima da barra no terminal
 
-    print(f"\n{'='*85}")
-    print(f"{'📊 GRÁFICO: LETALIDADE (%) POR COMORBIDADE':^85}")
-    print(f"{'='*85}\n")
+    print(f"\n{'='*75}")
+    print(f"{'📊 GRÁFICO: LETALIDADE (%) POR COMORBIDADE':^75}")
+    print(f"{'='*75}\n")
 
     for _, row in df_plot.iterrows():
         nome = row['Comorbidade']
@@ -33,9 +33,9 @@ def exibir_grafico_ascii_comorbidades(df):
         size = int((letal / max_val) * max_width) if max_val > 0 else 0
         barra = '█' * size
         
-        print(f"  {nome:<15} {barra:<40} {letal:6.2f}% ({obitos}/{casos})")
+        print(f"  {nome:<15} {barra:<40} {letal:6.2f}%")
 
-    print(f"\n{'='*85}\n")
+    print(f"\n{'='*75}\n")
 
 def analisar_letalidade_comorbidades(pasta_dados):
     """Calcula letalidade e exibe tabela e gráfico."""
@@ -88,9 +88,9 @@ def analisar_letalidade_comorbidades(pasta_dados):
     df_resumo = pd.DataFrame(dados_finais).sort_values('Letalidade_%', ascending=False)
 
     # Exibição da Tabela
-    print(f"\n{'-'*85}")
-    print(f"{'TABELA: RESUMO DE LETALIDADE POR COMORBIDADE':^85}")
-    print(f"{'-'*85}")
+    print(f"\n{'-'*75}")
+    print(f"{'TABELA: RESUMO DE LETALIDADE POR COMORBIDADE':^75}")
+    print(f"{'-'*75}")
     print(df_resumo.to_string(index=False))
     
     # Exibição do Gráfico

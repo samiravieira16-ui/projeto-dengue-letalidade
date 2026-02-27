@@ -34,7 +34,7 @@ def exibir_grafico_ascii(df):
         
         size = int((letal / max_val) * max_width) if max_val > 0 else 0
         barra = '█' * size
-        print(f"  Sorotipo {soro:<3} {barra:<45} {letal:6.2f}% ({obitos}/{casos})")
+        print(f"  Sorotipo {soro:<3} {barra:<45} {letal:6.2f}%")
 
     print(f"\n{'='*75}\n")
 

@@ -22,7 +22,4 @@ print("- 'Original': nome original da base/SINAN;")
 print("- 'Tipo' e 'Valores Possíveis': formato e códigos esperados;")
 print("- 'Descricao': explicação do significado do campo.")
 
-df_interativofrom analises.comorbidades_view import analisar_letalidade_comorbidades
-
-df = analisar_letalidade_comorbidades('dados', 'resultados')
-print(df)
+print(df_interativo)

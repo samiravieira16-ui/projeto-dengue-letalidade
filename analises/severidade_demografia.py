@@ -23,16 +23,13 @@ def exibir_grafico_demografico_ascii(df_dist):
 
     print(f"\n{'='*75}\n")
 
-def analisar_severidade_demografia_absoluta(pasta_dados, pasta_saida="resultados"):
+def analisar_severidade_demografia_absoluta(pasta_dados):
     """Analisa a distribuição absoluta de óbitos por Sexo e Faixa Etária."""
     arquivos = glob.glob(os.path.join(pasta_dados, "*.parquet"))
     
     if not arquivos:
         print(f"⚠ Nenhum arquivo .parquet encontrado em: {pasta_dados}")
         return None
-
-    if not os.path.exists(pasta_saida):
-        os.makedirs(pasta_saida)
 
     lista_obitos = []
     print(f"⏳ Analisando demografia de óbitos em {len(arquivos)} arquivos...")
@@ -85,12 +82,7 @@ def analisar_severidade_demografia_absoluta(pasta_dados, pasta_saida="resultados
 
     exibir_grafico_demografico_ascii(distribuicao_absoluta)
 
-    # Salvar o resultado
-    caminho_csv = os.path.join(pasta_saida, "distribuicao_absoluta_obitos.csv")
-    distribuicao_absoluta.to_csv(caminho_csv)
-    
-    print(f"✅ Análise concluída. Total: {len(df_final)} óbitos.")
-    print(f"💾 Tabela salva em: {caminho_csv}\n")
+    print(f"✅ Análise concluída. Total: {len(df_final)} óbitos.\n")
 
     return distribuicao_absoluta
 
