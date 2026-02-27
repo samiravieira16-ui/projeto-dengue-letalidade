@@ -24,16 +24,28 @@ A base de dados é extraída do **SINAN (Sistema de Informação de Agravos de N
 
 ### Variáveis Selecionadas para o Estudo
 
+## 📋 Dicionário de Dados e Variáveis
+
+Abaixo estão descritas as principais variáveis utilizadas nos scripts de análise, categorizadas por sua função no estudo epidemiológico.
+
 | Variável | Categoria | Função na Análise |
 | :--- | :--- | :--- |
-| `sg_uf_not` | Geográfica | Identificar variações regionais na letalidade. |
-| `dt_sin_pri` | Temporal | Marco zero do paciente. Essencial para calcular a velocidade da doença. |
-| `cs_sexo` | Demográfica | Verificar disparidades de letalidade entre sexos biológicos. |
-| `nu_idade_n` | Demográfica | Base para criação de faixas etárias (infantil, adulto, idoso). |
-| `dt_obito` | Desfecho | Variável alvo para o cálculo do intervalo de tempo de sobrevivência. |
-| `sorotipo` | Viral | Analisar se sorotipos específicos (DENV-1 a 4) são mais letais em grupos de risco. |
-| **Comorbidades*** | Clínica | Variáveis binárias (Sim/Não) para cálculo de risco relativo. |
+| **sg_uf_not** | Geográfica | Identificar variações regionais e disparidades na letalidade entre estados. |
+| **dt_sin_pri** | Temporal | Marco zero do paciente. Essencial para calcular o tempo de progressão da doença. |
+| **cs_sexo** | Demográfica | Analisar se existe maior vulnerabilidade ou exposição entre sexos biológicos. |
+| **nu_idade_n** | Demográfica | Base para converter a idade em faixas etárias (infantil, adulto, idoso). |
+| **dt_obito** | Desfecho | Marco final para o cálculo do intervalo de tempo de sobrevivência (Sintoma ➔ Óbito). |
+| **evolucao** | Desfecho | **Variável Alvo (Target):** Define se o registro entra no cálculo de letalidade (Óbito vs Cura). |
+| **sorotipo** | Viral | Crucial para identificar qual variante (DENV-1 a 4) é mais agressiva no cenário atual. |
+| **Comorbidades*** | Clínica | Conjunto de 7 variáveis para medir o risco prévio do paciente. |
+| **classi_fin** | Clínica | Confirma se o caso foi tecnicamente classificado como Grave ou com Sinais de Alarme. |
 
+---
+
+### 📝 Notas Adicionais
+
+* **Comorbidades (*):** O estudo considera especificamente um conjunto de 7 condições: *Diabetes, Hematológica, Hepatopatia, Renal, Hipertensão, Ácido-Péptica e Autoimune*.
+* **Tempo Médio:** A combinação das variáveis `dt_sin_pri` e `dt_obito` é o que gera os cálculos para o gráfico de **"Dinâmica Temporal"** apresentado no relatório.
 > **(*) Comorbidades incluídas:** Diabetes, Doenças Hematológicas, Hepatopatias, Doença Renal, Hipertensão, Ácido Péptico e Doenças Autoimunes.
 
 ---
@@ -45,6 +57,7 @@ Investigar o perfil epidemiológico e clínico dos pacientes que evoluíram para
 
 ### Objetivos Específicos
 
+* **analisar_obitos_ano_sorotipo:** 
 * **Taxa de Letalidade por Sorotipo:** Determinar a letalidade específica para cada sorotipo circulante, avaliando se há predominância de óbitos associada a uma variante viral específica.
 * **Análise de Comorbidades:** Mapear a prevalência de doenças preexistentes nos casos fatais, identificando qual agravo apresenta a maior taxa de letalidade proporcional.
 * **Severidade e Demografia:** Correlacionar a prevalência de formas graves da doença com as variáveis de sexo e faixa etária.
@@ -57,14 +70,20 @@ Para espelhar o trabalho realizado no Colab em seu ambiente local (VS Code), uti
 
 ```text
 PROJETO-DENGUE-LETALIDADE/
-├── analises/                   # Scripts para processamento dos Objetivos Específicos:
-│   ├── Letalidade por Sorotipos
-│   ├── Dinâmica Temporal (Início de Sintomas ao Óbito)
-│   ├── Cruzamento de Severidade e Demografia
-│   └── Mapeamento de Letalidade por Comorbidades
-├── docs/                       # Documentação técnica e materiais de referência
-├── Execução_dos_projetos.ipynb  # Notebook principal que integra e executa as análises
-├── install_UV.txt              # Guia de configuração do ambiente via gerenciador UV
-├── LICENSE                     # Licença de uso do repositório
-├── README.md                   # Documentação principal e visão geral
-└── requirements.txt            # Dependências Python para replicação do projeto
+├── analises/                   # Scripts modulares de análise:
+│   ├── analisar_obitos_ano_sorotipo.py
+│   ├── comorbidades_view.py
+│   ├── dinamica_temporal.py
+│   ├── letalidade_sorotipos.py
+│   └── severidade_demografia.py
+├── dados/                       # Base de dados e dicionários:
+│   ├── dicionario.py            # Estrutura de variáveis do Sinan
+│   └── *.parquet                # Microdados de 2021 a 2025
+├── docs/                        # Documentação técnica de referência
+├── executar_relatorio.py        # Script centralizador do relatório no terminal
+├── Execução_dos_projetos.ipynb  # Notebook integrado de análises
+├── install_UV.txt               # Guia de configuração do ambiente
+├── LICENSE                      # Licença do repositório
+├── README.md                    # Documentação principal
+└── requirements.txt             # Dependências Python atualizadas
+
