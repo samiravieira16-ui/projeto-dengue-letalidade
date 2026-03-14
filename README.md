@@ -1,9 +1,3 @@
-## 👥 Membros da Equipe
-
-* **Samira Vieira Santos Almeida**
-* **Felipe Emmanuel Leite Lira**
-* **Ramon Firmino Bezerra**
-* **Pyerre Lima Diniz**
 
 # Projeto Dengue Letalidade: Fatores de Risco e Evolução Clínica (2021-2025)
 
