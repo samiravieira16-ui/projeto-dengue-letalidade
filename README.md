@@ -50,6 +50,7 @@ Investigar o perfil epidemiológico e clínico dos pacientes que evoluíram para
 3. **Dinâmica Temporal** — intervalo médio de dias entre o primeiro sintoma e o óbito por sorotipo.
 4. **Letalidade por Sorotipo** — comparação direta da gravidade clínica entre variantes virais.
 5. **Perfil Demográfico** — distribuição de óbitos por faixa etária e sexo.
+6. **Análise de Dados Nulos** — identificação da proporção de óbitos que ocorrem sem a identificação do sorotipo viral.
 
 ---
 
@@ -63,7 +64,8 @@ PROJETO-DENGUE-LETALIDADE/
 │   ├── comorbidades_view.py            # Seção 2: Impacto das comorbidades
 │   ├── dinamica_temporal.py            # Seção 3: Dias até o óbito
 │   ├── letalidade_sorotipos.py         # Seção 4: Letalidade por sorotipo
-│   └── severidade_demografia.py        # Seção 5: Perfil demográfico dos óbitos
+│   ├── severidade_demografia.py        # Seção 5: Perfil demográfico dos óbitos
+│   └── analisar_sorotipos_nulos.py     # Seção 6: Óbitos sem sorotipo (Dados Nulos)
 │
 ├── dados/                              # Dados processados (não versionados)
 │   ├── dengue_limpo_part_dengue_2021_confirmados.parquet
@@ -106,12 +108,13 @@ Execute o script principal a partir da raiz do projeto:
 python executar_relatorio.py
 ```
 
-O relatório será gerado diretamente no console, organizado em **5 seções** na seguinte ordem:
+O relatório será gerado diretamente no console, organizado em **6 seções** na seguinte ordem:
 1. Evolução Anual de Óbitos e Sorotipos
 2. Impacto das Comorbidades na Letalidade
 3. Dinâmica Temporal — Dias até o Óbito
 4. Letalidade Específica por Sorotipo
 5. Perfil Demográfico dos Óbitos
+6. Análise de Dados Nulos (Óbitos sem Sorotipo)
 
 ---
 
