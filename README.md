@@ -1,3 +1,6 @@
+
+# Projeto Dengue Letalidade: Fatores de Risco e Evolução Clínica (2021-2025)
+
 ## 👥 Membros da Equipe
 
 * **Samira Vieira Santos Almeida**
@@ -5,85 +8,129 @@
 * **Ramon Firmino Bezerra**
 * **Pyerre Lima Diniz**
 
-# Projeto Dengue Letalidade: Fatores de Risco e Evolução Clínica (2021-2025)
+## 1. Tema e Problema
 
-## 1. Tema e Problema Definido
+**Tema:** Análise dos fatores determinantes da letalidade por Dengue no Brasil a partir de dados secundários do SINAN (2021–2025).
 
-**Tema:** Análise dos fatores determinantes da Letalidad por Dengue no Brasil a partir de dados secundários do SINAN.
-
-**Problema:** Embora a Dengue seja uma doença sazonal conhecida, a taxa de letalidade varia drasticamente conforme o perfil do paciente. O ponto central deste projeto é identificar: **Quais combinações de fatores (comorbidades específicas, faixa etária e sexo) estão mais fortemente associadas ao óbito e qual é a janela temporal crítica (dias após o sintoma) em que esses óbitos ocorrem?** A ausência de um padrão claro sobre o tempo de evolução clínica em pacientes com comorbidades dificulta a triagem prioritária e o manejo hospitalar imediato, tornando essencial a identificação desses grupos de risco para reduzir a mortalidade evitável.
+**Problema:** Embora a Dengue seja uma doença sazonal conhecida, a taxa de letalidade varia drasticamente conforme o perfil do paciente. O projeto busca responder: **Quais combinações de fatores (comorbidades, faixa etária e sexo) estão mais fortemente associadas ao óbito, e qual é a janela temporal crítica (dias após o início dos sintomas) em que esses óbitos ocorrem?**
 
 ---
 
-## 2. Descrição da Base de Dados
+## 2. Base de Dados
 
-A base de dados é extraída do **SINAN (Sistema de Informação de Agravos de Notificação)**, disponibilizada via Kaggle. Ela contém microdados das notificações compulsórias de Dengue no Brasil de 2021 a 2025.
+- **Fonte:** SINAN (Sistema de Informação de Agravos de Notificação) / DATASUS, disponibilizado via Kaggle.
+- **Período:** 2021 a 2025 (casos confirmados de Dengue).
+- **Formato:** Arquivos `.parquet` particionados por ano para máxima performance de leitura.
 
-* **Fonte:** SINAN/DATASUS.
-* **Ambiente de Análise:** Google Colab (processamento em nuvem via upload).
-
-### Variáveis Selecionadas para o Estudo
-
-## 📋 Dicionário de Dados e Variáveis
-
-Abaixo estão descritas as principais variáveis utilizadas nos scripts de análise, categorizadas por sua função no estudo epidemiológico.
+### Dicionário de Variáveis
 
 | Variável | Categoria | Função na Análise |
 | :--- | :--- | :--- |
-| **sg_uf_not** | Geográfica | Identificar variações regionais e disparidades na letalidade entre estados. |
-| **dt_sin_pri** | Temporal | Marco zero do paciente. Essencial para calcular o tempo de progressão da doença. |
-| **cs_sexo** | Demográfica | Analisar se existe maior vulnerabilidade ou exposição entre sexos biológicos. |
-| **nu_idade_n** | Demográfica | Base para converter a idade em faixas etárias (infantil, adulto, idoso). |
-| **dt_obito** | Desfecho | Marco final para o cálculo do intervalo de tempo de sobrevivência (Sintoma ➔ Óbito). |
-| **evolucao** | Desfecho | **Variável Alvo (Target):** Define se o registro entra no cálculo de letalidade (Óbito vs Cura). |
-| **sorotipo** | Viral | Crucial para identificar qual variante (DENV-1 a 4) é mais agressiva no cenário atual. |
-| **Comorbidades*** | Clínica | Conjunto de 7 variáveis para medir o risco prévio do paciente. |
-| **classi_fin** | Clínica | Confirma se o caso foi tecnicamente classificado como Grave ou com Sinais de Alarme. |
+| `sg_uf_not` | Geográfica | Variações regionais na letalidade |
+| `dt_sin_pri` | Temporal | Marco zero do paciente (início dos sintomas) |
+| `cs_sexo` | Demográfica | Disparidades de letalidade entre sexos |
+| `nu_idade_n` | Demográfica | Base para criação de faixas etárias |
+| `dt_obito` | Desfecho | Cálculo do intervalo de sobrevivência |
+| `sorotipo` | Viral | Análise de letalidade por DENV-1 a DENV-4 |
+| **Comorbidades** | Clínica | Variáveis binárias (Sim/Não) para risco relativo |
 
----
-
-### 📝 Notas Adicionais
-
-* **Comorbidades (*):** O estudo considera especificamente um conjunto de 7 condições: *Diabetes, Hematológica, Hepatopatia, Renal, Hipertensão, Ácido-Péptica e Autoimune*.
-* **Tempo Médio:** A combinação das variáveis `dt_sin_pri` e `dt_obito` é o que gera os cálculos para o gráfico de **"Dinâmica Temporal"** apresentado no relatório.
-> **(*) Comorbidades incluídas:** Diabetes, Doenças Hematológicas, Hepatopatias, Doença Renal, Hipertensão, Ácido Péptico e Doenças Autoimunes.
+> **Comorbidades incluídas:** Diabetes, Doenças Hematológicas, Hepatopatias, Doença Renal, Hipertensão, Ácido Péptico e Doenças Autoimunes.
 
 ---
 
 ## 3. Objetivos do Projeto
 
-### Objetivo Geral
-Investigar o perfil epidemiológico e clínico dos pacientes que evoluíram para óbito por dengue no Brasil, estabelecendo a correlação entre vulnerabilidades biológicas e a velocidade da progressão da doença.
+### Geral
+Investigar o perfil epidemiológico e clínico dos pacientes que evoluíram para óbito por dengue no Brasil, correlacionando vulnerabilidades biológicas à velocidade de progressão da doença.
 
-### Objetivos Específicos
+### Específicos
 
-* **analisar_obitos_ano_sorotipo:** 
-* **Taxa de Letalidade por Sorotipo:** Determinar a letalidade específica para cada sorotipo circulante, avaliando se há predominância de óbitos associada a uma variante viral específica.
-* **Análise de Comorbidades:** Mapear a prevalência de doenças preexistentes nos casos fatais, identificando qual agravo apresenta a maior taxa de letalidade proporcional.
-* **Severidade e Demografia:** Correlacionar a prevalência de formas graves da doença com as variáveis de sexo e faixa etária.
-* **Dinâmica Temporal do Óbito:** Calcular o intervalo médio de dias entre o primeiro sintoma (`dt_sin_pri`) e o óbito, comparando a velocidade da doença entre diferentes grupos.
+1. **Evolução Anual de Óbitos por Sorotipo** — variação histórica e predominância entre DENV-1 a DENV-4.
+2. **Impacto das Comorbidades** — mapeamento das doenças preexistentes com maior taxa de letalidade proporcional.
+3. **Dinâmica Temporal** — intervalo médio de dias entre o primeiro sintoma e o óbito por sorotipo.
+4. **Letalidade por Sorotipo** — comparação direta da gravidade clínica entre variantes virais.
+5. **Perfil Demográfico** — distribuição de óbitos por faixa etária e sexo.
+6. **Análise de Dados Nulos** — identificação da proporção de óbitos que ocorrem sem a identificação do sorotipo viral.
+
 ---
 
-## 📂 Estrutura de Diretórios (Local)
-
-Para espelhar o trabalho realizado no Colab em seu ambiente local (VS Code), utilize a seguinte estrutura:
+## 4. Estrutura do Projeto
 
 ```text
 PROJETO-DENGUE-LETALIDADE/
-├── analises/                   # Scripts modulares de análise:
-│   ├── analisar_obitos_ano_sorotipo.py
-│   ├── comorbidades_view.py
-│   ├── dinamica_temporal.py
-│   ├── letalidade_sorotipos.py
-│   └── severidade_demografia.py
-├── dados/                       # Base de dados e dicionários:
-│   ├── dicionario.py            # Estrutura de variáveis do Sinan
-│   └── *.parquet                # Microdados de 2021 a 2025
-├── docs/                        # Documentação técnica de referência
-├── executar_relatorio.py        # Script centralizador do relatório no terminal
-├── Execução_dos_projetos.ipynb  # Notebook integrado de análises
-├── install_UV.txt               # Guia de configuração do ambiente
-├── LICENSE                      # Licença do repositório
-├── README.md                    # Documentação principal
-└── requirements.txt             # Dependências Python atualizadas
+│
+├── analises/                           # Scripts modulares de análise
+│   ├── analisar_obitos_ano_sorotipo.py # Seção 1: Evolução anual e sorotipos
+│   ├── comorbidades_view.py            # Seção 2: Impacto das comorbidades
+│   ├── dinamica_temporal.py            # Seção 3: Dias até o óbito
+│   ├── letalidade_sorotipos.py         # Seção 4: Letalidade por sorotipo
+│   ├── severidade_demografia.py        # Seção 5: Perfil demográfico dos óbitos
+│   └── analisar_sorotipos_nulos.py     # Seção 6: Óbitos sem sorotipo (Dados Nulos)
+│
+├── dados/                              # Dados processados (não versionados)
+│   ├── dengue_limpo_part_dengue_2021_confirmados.parquet
+│   ├── dengue_limpo_part_dengue_2022_confirmados.parquet
+│   ├── dengue_limpo_part_dengue_2023_confirmados.parquet
+│   ├── dengue_limpo_part_dengue_2024_confirmados.parquet
+│   ├── dengue_limpo_part_dengue_2025_confirmados.parquet
+│   └── dicionario.py                   # Mapeamento e codificação das variáveis
+│
+├── docs/                               # Documentação técnica e materiais de referência
+│
+├── executar_relatorio.py               # ▶ Script principal — gera o relatório consolidado
+├── main.py                             # Script auxiliar de entrada
+├── Limpeza_dos_dados.ipynb             # Notebook de limpeza e pré-processamento dos dados brutos
+├── install_UV.txt                      # Guia de configuração do ambiente via gerenciador UV
+├── requirements.txt                    # Dependências Python
+└── README.md                           # Este arquivo
+```
 
+---
+
+## 5. Como Executar
+
+### Pré-requisitos
+
+- Python 3.10+
+- Dependências listadas em `requirements.txt`
+
+### Instalação
+
+```bash
+pip install -r requirements.txt
+```
+
+### Gerar o Relatório Consolidado
+
+Execute o script principal a partir da raiz do projeto:
+
+```bash
+python executar_relatorio.py
+```
+
+O relatório será gerado diretamente no console, organizado em **6 seções** na seguinte ordem:
+1. Evolução Anual de Óbitos e Sorotipos
+2. Impacto das Comorbidades na Letalidade
+3. Dinâmica Temporal — Dias até o Óbito
+4. Letalidade Específica por Sorotipo
+5. Perfil Demográfico dos Óbitos
+6. Análise de Dados Nulos (Óbitos sem Sorotipo)
+
+---
+
+## 6. Dependências
+
+| Biblioteca | Versão | Uso |
+| :--- | :--- | :--- |
+| `pandas` | 3.0.1 | Manipulação e análise dos dados |
+| `pyarrow` | 23.0.1 | Leitura dos arquivos `.parquet` |
+| `tabulate` | 0.9.0 | Formatação de tabelas no terminal |
+| `matplotlib` | latest | Geração de gráficos |
+| `seaborn` | latest | Visualizações estatísticas |
+| `jupyter` | latest | Execução dos notebooks |
+
+---
+
+## 7. Licença
+
+Este projeto está licenciado sob os termos descritos em [LICENSE](./LICENSE).

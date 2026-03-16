@@ -8,6 +8,7 @@ from analises.dinamica_temporal import analisar_dinamica_temporal
 from analises.letalidade_sorotipos import calcular_letalidade
 from analises.severidade_demografia import analisar_severidade_demografia_absoluta
 from analises.analisar_obitos_ano_sorotipo import executar_analise_anual
+from analises.analisar_sorotipos_nulos import analisar_sorotipos_nulos, exibir_tabela_nulos, exibir_grafico_ascii_nulos
 
 def main():
     PASTA_DADOS = "dados"
@@ -36,6 +37,12 @@ def main():
         # 5. Análise de Óbitos por Ano e Sorotipo
         print("\n🟡 Executando Análise de Óbitos por Ano e Sorotipo...")
         df_obitos_ano = executar_analise_anual(PASTA_DADOS)
+
+        # 6. Análise de Sorotipos Nulos em Óbitos
+        print("\n🟡 Executando Análise de Sorotipos Nulos em Óbitos...")
+        df_nulos = analisar_sorotipos_nulos(PASTA_DADOS)
+        exibir_tabela_nulos(df_nulos)
+        exibir_grafico_ascii_nulos(df_nulos)
 
         print(f"\n{'='*80}")
         print(f"{'✅ TODAS AS ANÁLISES CONCLUÍDAS COM SUCESSO!':^80}")

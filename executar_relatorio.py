@@ -20,6 +20,7 @@ try:
     from dinamica_temporal import analisar_dinamica_temporal, exibir_tabela_temporal, exibir_grafico_temporal_ascii
     from letalidade_sorotipos import calcular_letalidade, exibir_tabela_letalidade, exibir_grafico_ascii as exibir_grafico_letalidade_sorotipo
     from severidade_demografia import analisar_severidade_demografia_absoluta, exibir_grafico_demografico_ascii
+    from analisar_sorotipos_nulos import analisar_sorotipos_nulos, exibir_tabela_nulos, exibir_grafico_ascii_nulos
 except ImportError as e:
     print(f"❌ Erro ao importar scripts de análise: {e}")
     sys.exit(1)
@@ -42,7 +43,7 @@ def main():
     
     print("\n" + "╔" + "═"*78 + "╗", flush=True)
     print("║" + "RELATÓRIO CONSOLIDADO DE LETALIDADE E DINÂMICA DA DENGUE".center(78) + "║", flush=True)
-    print("║" + "Status: Iniciando processamento de 5 seções...".center(78) + "║", flush=True)
+    print("║" + "Status: Iniciando processamento de 6 seções...".center(78) + "║", flush=True)
     print("╚" + "═"*78 + "╝\n", flush=True)
 
     # --- SEÇÃO 1: EVOLUÇÃO ANUAL E SOROTIPOS ---
@@ -114,6 +115,25 @@ def main():
         )
     except Exception as e:
         print(f"❌ Erro na Seção 5: {e}")
+
+    # --- SEÇÃO 6: ANÁLISE DE DADOS NULOS (ÓBITOS SEM SOROTIPO) ---
+    separador()
+    titulo_secao("Seção 6: Análise de Dados Nulos - Óbitos sem Sorotipo")
+    print("⏳ Analisando proporção de sorotipos nulos em óbitos...")
+    try:
+        df_nulos = analisar_sorotipos_nulos(pasta_dados)
+        
+        exibir_tabela_nulos(df_nulos)
+        exibir_grafico_ascii_nulos(df_nulos)
+        
+        exibir_comentarios(
+            "Esta seção destaca o desafio da vigilância genômica. Muitos óbitos ocorrem sem "
+            "que o sorotipo viral seja identificado, o que pode mascarar a letalidade real de variantes específicas.\n"
+            "Observa-se uma melhora significativa na identificação: em 2021, 86.6% eram nulos, "
+            "enquanto em 2025 esse número caiu para 57.8%."
+        )
+    except Exception as e:
+        print(f"❌ Erro na Seção 6: {e}")
 
     separador()
     print("✅ RELATÓRIO FINALIZADO".center(80))
